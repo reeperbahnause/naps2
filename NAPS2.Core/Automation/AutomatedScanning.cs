@@ -274,13 +274,14 @@ namespace NAPS2.Automation
                 return;
             }
 
+            var barcode = imageList.Images[0].Barcode;
 
             OutputVerbose(ConsoleResources.Emailing);
 
             var message = new EmailMessage
             {
-                Subject = fileNamePlaceholders.SubstitutePlaceholders(options.EmailSubject, startTime, false) ?? "",
-                BodyText = fileNamePlaceholders.SubstitutePlaceholders(options.EmailBody, startTime, false),
+                Subject = fileNamePlaceholders.SubstitutePlaceholders(options.EmailSubject, startTime, barcode, false) ?? "",
+                BodyText = fileNamePlaceholders.SubstitutePlaceholders(options.EmailBody, startTime, barcode, false),
                 AutoSend = options.EmailAutoSend,
                 SilentSend = options.EmailSilentSend
             };
@@ -293,7 +294,7 @@ namespace NAPS2.Automation
             tempFolder.Create();
             try
             {
-                string attachmentName = fileNamePlaceholders.SubstitutePlaceholders(options.EmailFileName, startTime, false);
+                string attachmentName = fileNamePlaceholders.SubstitutePlaceholders(options.EmailFileName, startTime, barcode, false);
                 string targetPath = Path.Combine(tempFolder.FullName, attachmentName);
                 if (IsPdfFile(targetPath))
                 {

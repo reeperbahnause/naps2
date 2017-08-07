@@ -26,6 +26,9 @@ using NAPS2.Scan.Exceptions;
 using NAPS2.Scan.Images;
 using NAPS2.Scan.Wia;
 using NAPS2.Util;
+using ZXing;
+using System.Net;
+using System.Collections.Specialized;
 
 #endregion
 
@@ -466,6 +469,22 @@ namespace NAPS2.WinForms
         private void AppendThumbnail(ScannedImage scannedImage)
         {
             thumbnailList1.AppendImage(scannedImage);
+
+            // Check if a barcode was recognized
+            if (scannedImage.Barcode != null)
+            {
+                if(thumbnailList1.Groups[scannedImage.Barcode] == null)
+                {
+                    thumbnailList1.Groups.Add(scannedImage.Barcode, scannedImage.Barcode);
+                }
+
+                thumbnailList1.Items[thumbnailList1.Items.Count -1].Group = thumbnailList1.Groups[scannedImage.Barcode];
+            }
+            else if(thumbnailList1.Groups.Count > 0)
+            {
+                thumbnailList1.Items[thumbnailList1.Items.Count - 1].Group = thumbnailList1.Groups[thumbnailList1.Groups.Count -1];
+            }
+                        
             UpdateToolbar();
         }
 
@@ -504,7 +523,7 @@ namespace NAPS2.WinForms
 
             // Top-level toolbar actions
             tsdImage.Enabled = tsdRotate.Enabled = tsMove.Enabled = tsDelete.Enabled = SelectedIndices.Any();
-            tsdReorder.Enabled = tsdSavePDF.Enabled = tsdSaveImages.Enabled = tsdEmailPDF.Enabled = tsPrint.Enabled = tsClear.Enabled = imageList.Images.Any();
+            tsdReorder.Enabled = tsdSavePDF.Enabled = tsdSaveImages.Enabled = tsdEmailPDF.Enabled = tsPrint.Enabled = tsExport.Enabled = tsClear.Enabled = imageList.Images.Any();
 
             // Context-menu actions
             ctxView.Visible = ctxCopy.Visible = ctxDelete.Visible = ctxSeparator1.Visible = ctxSeparator2.Visible = SelectedIndices.Any();
@@ -736,6 +755,16 @@ namespace NAPS2.WinForms
 
         #region Actions - Save/Email/Import
 
+        private void SeparateByBarcode(List<ScannedImage> images)
+        {
+            //Squeeze
+            if (profileManager.DefaultProfile.AutoSaveSettings != null)
+            {
+                var test = new[] { images };
+                var scans = SaveSeparatorHelper.SeparateScans(test, profileManager.DefaultProfile.AutoSaveSettings.Separator).ToList();
+            }
+        }
+
         private void SavePDF(List<ScannedImage> images)
         {
             if (exportHelper.SavePDF(images, notify))
@@ -757,6 +786,86 @@ namespace NAPS2.WinForms
                     imageList.Delete(imageList.Images.IndiciesOf(images));
                     UpdateThumbnails(Enumerable.Empty<int>(), false, false);
                 }
+            }
+        }
+
+        // Squeeze new Methode to save separated documents
+        private void SaveGroupedImages(List<ScannedImage> images, string tmpFileName)
+        {
+            if (exportHelper.SaveImages(images, notify, tmpFileName))
+            {
+                /*
+                if (appConfigManager.Config.DeleteAfterSaving)
+                {
+                    imageList.Delete(imageList.Images.IndiciesOf(images));
+                    UpdateThumbnails(Enumerable.Empty<int>(), false, false);
+                }
+                */
+            }
+        }
+
+        public static void HttpUploadFile(string url, string file, string paramName, string contentType, NameValueCollection nvc)
+        {
+            //log.Debug(string.Format("Uploading {0} to {1}", file, url));
+            string boundary = "---------------------------" + DateTime.Now.Ticks.ToString("x");
+            byte[] boundarybytes = System.Text.Encoding.ASCII.GetBytes("\r\n--" + boundary + "\r\n");
+
+            HttpWebRequest wr = (HttpWebRequest)WebRequest.Create(url);
+            wr.ContentType = "multipart/form-data; boundary=" + boundary;
+            wr.Method = "POST";
+            wr.KeepAlive = true;
+            wr.Credentials = System.Net.CredentialCache.DefaultCredentials;
+
+            Stream rs = wr.GetRequestStream();
+
+            string formdataTemplate = "Content-Disposition: form-data; name=\"{0}\"\r\n\r\n{1}";
+            foreach (string key in nvc.Keys)
+            {
+                rs.Write(boundarybytes, 0, boundarybytes.Length);
+                string formitem = string.Format(formdataTemplate, key, nvc[key]);
+                byte[] formitembytes = System.Text.Encoding.UTF8.GetBytes(formitem);
+                rs.Write(formitembytes, 0, formitembytes.Length);
+            }
+            rs.Write(boundarybytes, 0, boundarybytes.Length);
+
+            string headerTemplate = "Content-Disposition: form-data; name=\"{0}\"; filename=\"{1}\"\r\nContent-Type: {2}\r\n\r\n";
+            string header = string.Format(headerTemplate, paramName, file, contentType);
+            byte[] headerbytes = System.Text.Encoding.UTF8.GetBytes(header);
+            rs.Write(headerbytes, 0, headerbytes.Length);
+
+            FileStream fileStream = new FileStream(file, FileMode.Open, FileAccess.Read);
+            byte[] buffer = new byte[4096];
+            int bytesRead = 0;
+            while ((bytesRead = fileStream.Read(buffer, 0, buffer.Length)) != 0)
+            {
+                rs.Write(buffer, 0, bytesRead);
+            }
+            fileStream.Close();
+
+            byte[] trailer = System.Text.Encoding.ASCII.GetBytes("\r\n--" + boundary + "--\r\n");
+            rs.Write(trailer, 0, trailer.Length);
+            rs.Close();
+
+            WebResponse wresp = null;
+            try
+            {
+                wresp = wr.GetResponse();
+                Stream stream2 = wresp.GetResponseStream();
+                StreamReader reader2 = new StreamReader(stream2);
+                //log.Debug(string.Format("File uploaded, server response is: {0}", reader2.ReadToEnd()));
+            }
+            catch (Exception ex)
+            {
+                //log.Error("Error uploading file", ex);
+                if (wresp != null)
+                {
+                    wresp.Close();
+                    wresp = null;
+                }
+            }
+            finally
+            {
+                wr = null;
             }
         }
 
@@ -1100,6 +1209,74 @@ namespace NAPS2.WinForms
             }
         }
 
+        private void tsExport_Click(object sender, EventArgs e)
+        {
+            if (appConfigManager.Config.HideExportButton)
+            {
+                return;
+            }
+
+            var action = appConfigManager.Config.SaveButtonDefaultAction;
+            List<ScannedImage> deleteImages = new List<ScannedImage>(); // => imageList.Images.ElementsAt(SelectedIndices);
+
+            foreach (ListViewGroup group in thumbnailList1.Groups)
+            {
+                List<ScannedImage> docImages = new List<ScannedImage>(); // => imageList.Images.ElementsAt(SelectedIndices);
+                
+                foreach (ListViewItem imageItem in group.Items)
+                {
+                    docImages.Add(imageList.Images.ElementAt(imageItem.Index));
+                }
+
+                if (docImages.Count == 0)
+                {
+                    continue;
+                }
+
+                var barcode = group.Name;
+                //barcode = fileNamePlaceholders.SubstitutePlaceholders(attachmentName, DateTime.Now, barcode, false);
+
+                var tempFolder = new DirectoryInfo(Path.Combine(Paths.Temp, Path.GetRandomFileName()));
+                tempFolder.Create();
+                string targetPath = Path.Combine(tempFolder.FullName, barcode + ".tif");
+                Debug.WriteLine(targetPath);
+
+                SaveGroupedImages(docImages, targetPath);
+
+                // Squeeze now upload the saved document
+                NameValueCollection nvc = new NameValueCollection();
+                nvc.Add("batchClassId", "1");
+                nvc.Add("documentClassId", "0");
+                HttpUploadFile("http://server.domain.tld/api/processDocument", @targetPath, "documentFile", "image/tiff", nvc);
+
+                
+                if (profileManager.DefaultProfile.AutoSaveSettings.ClearImagesAfterSaving)
+                {
+                    deleteImages.AddRange(docImages);
+                }
+            }
+
+            imageList.Delete(imageList.Images.IndiciesOf(deleteImages));
+            UpdateThumbnails(Enumerable.Empty<int>(), false, false);
+
+            //SaveImages(imageList.Images);
+
+            if (action == SaveButtonDefaultAction.AlwaysPrompt || action == SaveButtonDefaultAction.PromptIfSelected && SelectedIndices.Any())
+            {
+                //tsdEmailPDF.ShowDropDown();
+            }
+            else if (action == SaveButtonDefaultAction.SaveSelected && SelectedIndices.Any())
+            {
+                //EmailPDF(SelectedImages.ToList());
+                System.Diagnostics.Debug.WriteLine("Export selected");
+            }
+            else
+            {
+                //EmailPDF(imageList.Images);
+                System.Diagnostics.Debug.WriteLine("Export all");
+            }
+        }
+
         private void tsPrint_Click(object sender, EventArgs e)
         {
             if (appConfigManager.Config.HidePrintButton)
@@ -1141,6 +1318,11 @@ namespace NAPS2.WinForms
         #endregion
 
         #region Event Handlers - Save/Email Menus
+
+        private void tsSplit_Click(object sender, EventArgs e)
+        {
+            SeparateByBarcode(imageList.Images);
+        }
 
         private void tsSavePDFAll_Click(object sender, EventArgs e)
         {
@@ -1771,6 +1953,8 @@ namespace NAPS2.WinForms
             return dragToIndex;
         }
 
+
         #endregion
+
     }
 }

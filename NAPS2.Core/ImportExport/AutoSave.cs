@@ -80,12 +80,15 @@ namespace NAPS2.ImportExport
                 return true;
             }
             var form = formFactory.Create<FProgress>();
-            string subPath = fileNamePlaceholders.SubstitutePlaceholders(settings.FilePath, now, true, i);
+
+            var barcode = images[0].Barcode;
+
+            string subPath = fileNamePlaceholders.SubstitutePlaceholders(settings.FilePath, now, barcode, true, i);
             if (settings.PromptForFilePath)
             {
                 if (dialogHelper.PromptToSavePdfOrImage(subPath, out string newPath))
                 {
-                    subPath = fileNamePlaceholders.SubstitutePlaceholders(newPath, now, true, i);
+                    subPath = fileNamePlaceholders.SubstitutePlaceholders(newPath, now, barcode, true, i);
                 }
             }
             var extension = Path.GetExtension(subPath);
@@ -93,7 +96,7 @@ namespace NAPS2.ImportExport
             {
                 if (File.Exists(subPath))
                 {
-                    subPath = fileNamePlaceholders.SubstitutePlaceholders(subPath, now, true, 0, 1);
+                    subPath = fileNamePlaceholders.SubstitutePlaceholders(subPath, now, barcode, true, 0, 1);
                 }
                 var op = operationFactory.Create<SavePdfOperation>();
                 form.Operation = op;

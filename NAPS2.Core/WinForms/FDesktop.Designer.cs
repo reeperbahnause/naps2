@@ -55,6 +55,8 @@ namespace NAPS2.WinForms
             this.tsOcr = new System.Windows.Forms.ToolStripButton();
             this.tsImport = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator5 = new System.Windows.Forms.ToolStripSeparator();
+            this.tsSplit = new System.Windows.Forms.ToolStripButton();
+            this.tsExport = new System.Windows.Forms.ToolStripButton();
             this.tsdSavePDF = new System.Windows.Forms.ToolStripSplitButton();
             this.tsSavePDFAll = new System.Windows.Forms.ToolStripMenuItem();
             this.tsSavePDFSelected = new System.Windows.Forms.ToolStripMenuItem();
@@ -235,6 +237,8 @@ namespace NAPS2.WinForms
             this.tsProfiles,
             this.tsOcr,
             this.tsImport,
+            this.tsSplit,
+            this.tsExport,
             this.toolStripSeparator5,
             this.tsdSavePDF,
             this.tsdSaveImages,
@@ -308,6 +312,22 @@ namespace NAPS2.WinForms
             // 
             this.toolStripSeparator5.Name = "toolStripSeparator5";
             resources.ApplyResources(this.toolStripSeparator5, "toolStripSeparator5");
+            // 
+            // tsSplit
+            // 
+            this.tsSplit.Image = global::NAPS2.Icons.barcode;
+            resources.ApplyResources(this.tsSplit, "tsSplit");
+            this.tsSplit.Name = "tsSplit";
+            this.tsSplit.Padding = new System.Windows.Forms.Padding(10, 0, 10, 0);
+            this.tsSplit.Click += new System.EventHandler(this.tsSplit_Click);
+            // 
+            // tsExport
+            // 
+            this.tsExport.Image = global::NAPS2.Icons.tick;
+            resources.ApplyResources(this.tsExport, "tsExport");
+            this.tsExport.Name = "tsExport";
+            this.tsExport.Padding = new System.Windows.Forms.Padding(10, 0, 10, 0);
+            this.tsExport.Click += new System.EventHandler(this.tsExport_Click);
             // 
             // tsdSavePDF
             // 
@@ -757,6 +777,8 @@ namespace NAPS2.WinForms
         private System.Windows.Forms.ToolStripMenuItem ctxPaste;
         private System.Windows.Forms.ToolStripButton tsPrint;
         private System.Windows.Forms.ToolStripMenuItem tsDeskew;
+        private System.Windows.Forms.ToolStripButton tsExport;
+        private System.Windows.Forms.ToolStripButton tsSplit;
     }
 }
 

@@ -543,11 +543,41 @@
   <data name="&gt;&gt;groupboxScanConfig.ZOrder" xml:space="preserve">
     <value>1</value>
   </data>
+  <data name="rdSeparateByBarcode.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="rdSeparateByBarcode.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="rdSeparateByBarcode.Location" type="System.Drawing.Point, System.Drawing">
+    <value>39, 69</value>
+  </data>
+  <data name="rdSeparateByBarcode.Size" type="System.Drawing.Size, System.Drawing">
+    <value>146, 17</value>
+  </data>
+  <data name="rdSeparateByBarcode.TabIndex" type="System.Int32, mscorlib">
+    <value>4</value>
+  </data>
+  <data name="rdSeparateByBarcode.Text" xml:space="preserve">
+    <value>Separate files by Barcode</value>
+  </data>
+  <data name="&gt;&gt;rdSeparateByBarcode.Name" xml:space="preserve">
+    <value>rdSeparateByBarcode</value>
+  </data>
+  <data name="&gt;&gt;rdSeparateByBarcode.Type" xml:space="preserve">
+    <value>System.Windows.Forms.RadioButton, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;rdSeparateByBarcode.Parent" xml:space="preserve">
+    <value>panelSaveSeparator</value>
+  </data>
+  <data name="&gt;&gt;rdSeparateByBarcode.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
   <data name="linkPatchCodeInfo.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
   </data>
   <data name="linkPatchCodeInfo.Location" type="System.Drawing.Point, System.Drawing">
-    <value>36, 66</value>
+    <value>189, 48</value>
   </data>
   <data name="linkPatchCodeInfo.Size" type="System.Drawing.Size, System.Drawing">
     <value>51, 13</value>
@@ -568,7 +598,7 @@
     <value>panelSaveSeparator</value>
   </data>
   <data name="&gt;&gt;linkPatchCodeInfo.ZOrder" xml:space="preserve">
-    <value>0</value>
+    <value>1</value>
   </data>
   <data name="rdSeparateByPatchT.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -598,7 +628,7 @@
     <value>panelSaveSeparator</value>
   </data>
   <data name="&gt;&gt;rdSeparateByPatchT.ZOrder" xml:space="preserve">
-    <value>1</value>
+    <value>2</value>
   </data>
   <data name="rdFilePerPage.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -628,7 +658,7 @@
     <value>panelSaveSeparator</value>
   </data>
   <data name="&gt;&gt;rdFilePerPage.ZOrder" xml:space="preserve">
-    <value>2</value>
+    <value>3</value>
   </data>
   <data name="rdFilePerScan.CheckAlign" type="System.Drawing.ContentAlignment, System.Drawing">
     <value>TopLeft</value>
@@ -661,13 +691,13 @@
     <value>panelSaveSeparator</value>
   </data>
   <data name="&gt;&gt;rdFilePerScan.ZOrder" xml:space="preserve">
-    <value>3</value>
+    <value>4</value>
   </data>
   <data name="panelSaveSeparator.Location" type="System.Drawing.Point, System.Drawing">
     <value>6, 88</value>
   </data>
   <data name="panelSaveSeparator.Size" type="System.Drawing.Size, System.Drawing">
-    <value>364, 84</value>
+    <value>364, 92</value>
   </data>
   <data name="panelSaveSeparator.TabIndex" type="System.Int32, mscorlib">
     <value>6</value>
@@ -793,7 +823,7 @@
     <value>3</value>
   </data>
   <data name="panelSaveTo.Location" type="System.Drawing.Point, System.Drawing">
-    <value>6, 174</value>
+    <value>9, 180</value>
   </data>
   <data name="panelSaveTo.Size" type="System.Drawing.Size, System.Drawing">
     <value>364, 60</value>
@@ -928,7 +958,7 @@
     <value>12, 272</value>
   </data>
   <data name="groupboxOutput.Size" type="System.Drawing.Size, System.Drawing">
-    <value>376, 238</value>
+    <value>376, 250</value>
   </data>
   <data name="groupboxOutput.TabIndex" type="System.Int32, mscorlib">
     <value>7</value>
@@ -958,7 +988,7 @@
     <value>6, 13</value>
   </data>
   <data name="$this.ClientSize" type="System.Drawing.Size, System.Drawing">
-    <value>400, 522</value>
+    <value>400, 533</value>
   </data>
   <data name="$this.Icon" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
@@ -997,7 +1027,7 @@
     <value>ilProfileIcons</value>
   </data>
   <data name="&gt;&gt;ilProfileIcons.Type" xml:space="preserve">
-    <value>NAPS2.WinForms.ILProfileIcons, NAPS2.Core, Version=5.2.1.29171, Culture=neutral, PublicKeyToken=null</value>
+    <value>NAPS2.WinForms.ILProfileIcons, NAPS2.Core, Version=5.5.0.32041, Culture=neutral, PublicKeyToken=null</value>
   </data>
   <data name="&gt;&gt;folderBrowserDialog1.Name" xml:space="preserve">
     <value>folderBrowserDialog1</value>
@@ -1009,6 +1039,6 @@
     <value>FBatchScan</value>
   </data>
   <data name="&gt;&gt;$this.Type" xml:space="preserve">
-    <value>NAPS2.WinForms.FormBase, NAPS2.Core, Version=5.2.1.29171, Culture=neutral, PublicKeyToken=null</value>
+    <value>NAPS2.WinForms.FormBase, NAPS2.Core, Version=5.5.0.32041, Culture=neutral, PublicKeyToken=null</value>
   </data>
 </root>

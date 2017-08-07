@@ -69,6 +69,7 @@ namespace NAPS2.WinForms
             this.rdSaveToSingleFile = new System.Windows.Forms.RadioButton();
             this.rdLoadIntoNaps2 = new System.Windows.Forms.RadioButton();
             this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
+            this.rdSeparateByBarcode = new System.Windows.Forms.RadioButton();
             this.groupboxScanConfig.SuspendLayout();
             this.panelScanDetails.SuspendLayout();
             this.panelScanType.SuspendLayout();
@@ -214,6 +215,7 @@ namespace NAPS2.WinForms
             // 
             // panelSaveSeparator
             // 
+            this.panelSaveSeparator.Controls.Add(this.rdSeparateByBarcode);
             this.panelSaveSeparator.Controls.Add(this.linkPatchCodeInfo);
             this.panelSaveSeparator.Controls.Add(this.rdSeparateByPatchT);
             this.panelSaveSeparator.Controls.Add(this.rdFilePerPage);
@@ -233,6 +235,12 @@ namespace NAPS2.WinForms
             resources.ApplyResources(this.rdSeparateByPatchT, "rdSeparateByPatchT");
             this.rdSeparateByPatchT.Name = "rdSeparateByPatchT";
             this.rdSeparateByPatchT.UseVisualStyleBackColor = true;
+            // 
+            // rdSeparateByBarcode
+            // 
+            resources.ApplyResources(this.rdSeparateByBarcode, "rdSeparateByBarcode");
+            this.rdSeparateByBarcode.Name = "rdSeparateByBarcode";
+            this.rdSeparateByBarcode.UseVisualStyleBackColor = true;
             // 
             // rdFilePerPage
             // 
@@ -373,6 +381,7 @@ namespace NAPS2.WinForms
         private System.Windows.Forms.Panel panelSaveSeparator;
         private System.Windows.Forms.LinkLabel linkPatchCodeInfo;
         private System.Windows.Forms.RadioButton rdSeparateByPatchT;
+        private System.Windows.Forms.RadioButton rdSeparateByBarcode;
         private System.Windows.Forms.RadioButton rdFilePerPage;
         private System.Windows.Forms.RadioButton rdFilePerScan;
         private System.Windows.Forms.FolderBrowserDialog folderBrowserDialog1;

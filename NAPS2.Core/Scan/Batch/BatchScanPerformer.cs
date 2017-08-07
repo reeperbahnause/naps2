@@ -93,6 +93,8 @@ namespace NAPS2.Scan.Batch
                 profile = profileManager.Profiles.First(x => x.DisplayName == Settings.ProfileDisplayName);
                 scanParams = new ScanParams
                 {
+                    //Squeeze enhancement Barcode separation
+                    DetectBarcodes = Settings.OutputType == BatchOutputType.MultipleFiles && Settings.SaveSeparator == SaveSeparator.Barcode,
                     DetectPatchCodes = Settings.OutputType == BatchOutputType.MultipleFiles && Settings.SaveSeparator == SaveSeparator.PatchT,
                     NoUI = true
                 };
@@ -281,12 +283,15 @@ namespace NAPS2.Scan.Batch
                 {
                     return;
                 }
-                var subPath = fileNamePlaceholders.SubstitutePlaceholders(Settings.SavePath, now, true, i);
+
+                var barcode = images[0].Barcode;
+
+                var subPath = fileNamePlaceholders.SubstitutePlaceholders(Settings.SavePath, now, barcode, true, i);
                 if (GetSavePathExtension().ToLower() == ".pdf")
                 {
                     if (File.Exists(subPath))
                     {
-                        subPath = fileNamePlaceholders.SubstitutePlaceholders(subPath, now, true, 0, 1);
+                        subPath = fileNamePlaceholders.SubstitutePlaceholders(subPath, now, barcode, true, 0, 1);
                     }
                     var ocrLanguageCode = userConfigManager.Config.EnableOcr ? userConfigManager.Config.OcrLanguageCode : null;
                     pdfExporter.Export(subPath, images, pdfSettingsContainer.PdfSettings, ocrLanguageCode, j => true);

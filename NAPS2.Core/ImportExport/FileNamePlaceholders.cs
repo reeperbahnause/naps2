@@ -33,7 +33,7 @@ namespace NAPS2.ImportExport
 
         private static readonly Regex NumberPlaceholderPattern = new Regex(@"\$\(n+\)");
 
-        public string SubstitutePlaceholders(string fileNameWithPath, DateTime dateTime, bool incrementIfExists = true, int numberSkip = 0, int autoNumberDigits = 0)
+        public string SubstitutePlaceholders(string fileNameWithPath, DateTime dateTime, string barcode = "", bool incrementIfExists = true, int numberSkip = 0, int autoNumberDigits = 0)
         {
             if (fileNameWithPath == null)
             {
@@ -41,8 +41,13 @@ namespace NAPS2.ImportExport
             }
             // Start with environment variables
             string result = Environment.ExpandEnvironmentVariables(fileNameWithPath);
+            
             // Most placeholders don't need a special case
             result = Placeholders.Aggregate(result, (current, ph) => current.Replace(ph.Key, ph.Value(dateTime)));
+
+            // Barcode replacement
+            result = result.Replace("$(BARCODE)", barcode);
+
             // One does, however
             var match = NumberPlaceholderPattern.Match(result);
             if (match.Success)

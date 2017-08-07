@@ -5,7 +5,8 @@
   <StartupMessageTitle></StartupMessageTitle>
   <StartupMessageText></StartupMessageText>
   <StartupMessageIcon>Information</StartupMessageIcon>
-  <SaveButtonDefaultAction>SaveAll</SaveButtonDefaultAction>
+  <!--<SaveButtonDefaultAction>SaveAll</SaveButtonDefaultAction>-->
+  <SaveButtonDefaultAction>AlwaysPrompt</SaveButtonDefaultAction>
   <HideEmailButton>false</HideEmailButton>
   <HidePrintButton>false</HidePrintButton>
   <DisableAutoSave>false</DisableAutoSave>

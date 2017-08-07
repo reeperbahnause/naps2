@@ -47,6 +47,16 @@ namespace NAPS2.WinForms
             this.lblFilePath = new System.Windows.Forms.Label();
             this.cbClearAfterSave = new System.Windows.Forms.CheckBox();
             this.cbPromptForFilePath = new System.Windows.Forms.CheckBox();
+            this.rdSeparateByBarcode = new System.Windows.Forms.RadioButton();
+            this.clbBarcodes = new System.Windows.Forms.CheckedListBox();
+            this.lblBarcodeRegEx = new System.Windows.Forms.Label();
+            this.tbBarcodeRegEx = new System.Windows.Forms.TextBox();
+            this.lblBarcodeIgnore = new System.Windows.Forms.Label();
+            this.tbBarcodeIgnore = new System.Windows.Forms.TextBox();
+            this.dgRestParameter = new System.Windows.Forms.DataGridView();
+            this.Parameter = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Value = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            ((System.ComponentModel.ISupportInitialize)(this.dgRestParameter)).BeginInit();
             this.SuspendLayout();
             // 
             // btnOK
@@ -126,11 +136,80 @@ namespace NAPS2.WinForms
             this.cbPromptForFilePath.Name = "cbPromptForFilePath";
             this.cbPromptForFilePath.UseVisualStyleBackColor = true;
             // 
+            // rdSeparateByBarcode
+            // 
+            resources.ApplyResources(this.rdSeparateByBarcode, "rdSeparateByBarcode");
+            this.rdSeparateByBarcode.Name = "rdSeparateByBarcode";
+            this.rdSeparateByBarcode.UseVisualStyleBackColor = true;
+            // 
+            // clbBarcodes
+            // 
+            this.clbBarcodes.CheckOnClick = true;
+            this.clbBarcodes.FormattingEnabled = true;
+            this.clbBarcodes.Items.AddRange(new object[] {
+            resources.GetString("clbBarcodes.Items"),
+            resources.GetString("clbBarcodes.Items1"),
+            resources.GetString("clbBarcodes.Items2"),
+            resources.GetString("clbBarcodes.Items3"),
+            resources.GetString("clbBarcodes.Items4"),
+            resources.GetString("clbBarcodes.Items5")});
+            resources.ApplyResources(this.clbBarcodes, "clbBarcodes");
+            this.clbBarcodes.Name = "clbBarcodes";
+            this.clbBarcodes.ItemCheck += new System.Windows.Forms.ItemCheckEventHandler(this.clbBarcodes_ItemCheck);
+            // 
+            // lblBarcodeRegEx
+            // 
+            resources.ApplyResources(this.lblBarcodeRegEx, "lblBarcodeRegEx");
+            this.lblBarcodeRegEx.Name = "lblBarcodeRegEx";
+            // 
+            // tbBarcodeRegEx
+            // 
+            resources.ApplyResources(this.tbBarcodeRegEx, "tbBarcodeRegEx");
+            this.tbBarcodeRegEx.Name = "tbBarcodeRegEx";
+            // 
+            // lblBarcodeIgnore
+            // 
+            resources.ApplyResources(this.lblBarcodeIgnore, "lblBarcodeIgnore");
+            this.lblBarcodeIgnore.Name = "lblBarcodeIgnore";
+            // 
+            // tbBarcodeIgnore
+            // 
+            resources.ApplyResources(this.tbBarcodeIgnore, "tbBarcodeIgnore");
+            this.tbBarcodeIgnore.Name = "tbBarcodeIgnore";
+            // 
+            // dgRestParameter
+            // 
+            this.dgRestParameter.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dgRestParameter.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.Parameter,
+            this.Value});
+            resources.ApplyResources(this.dgRestParameter, "dgRestParameter");
+            this.dgRestParameter.Name = "dgRestParameter";
+            // 
+            // Parameter
+            // 
+            this.Parameter.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            resources.ApplyResources(this.Parameter, "Parameter");
+            this.Parameter.Name = "Parameter";
+            // 
+            // Value
+            // 
+            this.Value.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            resources.ApplyResources(this.Value, "Value");
+            this.Value.Name = "Value";
+            // 
             // FAutoSaveSettings
             // 
             this.AcceptButton = this.btnOK;
             resources.ApplyResources(this, "$this");
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.dgRestParameter);
+            this.Controls.Add(this.tbBarcodeIgnore);
+            this.Controls.Add(this.lblBarcodeIgnore);
+            this.Controls.Add(this.tbBarcodeRegEx);
+            this.Controls.Add(this.lblBarcodeRegEx);
+            this.Controls.Add(this.clbBarcodes);
+            this.Controls.Add(this.rdSeparateByBarcode);
             this.Controls.Add(this.cbPromptForFilePath);
             this.Controls.Add(this.cbClearAfterSave);
             this.Controls.Add(this.btnChooseFolder);
@@ -146,6 +225,8 @@ namespace NAPS2.WinForms
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "FAutoSaveSettings";
+            this.Load += new System.EventHandler(this.OnLoad);
+            ((System.ComponentModel.ISupportInitialize)(this.dgRestParameter)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -166,5 +247,14 @@ namespace NAPS2.WinForms
         private System.Windows.Forms.Label lblFilePath;
         private System.Windows.Forms.CheckBox cbClearAfterSave;
         private System.Windows.Forms.CheckBox cbPromptForFilePath;
+        private System.Windows.Forms.RadioButton rdSeparateByBarcode;
+        private System.Windows.Forms.CheckedListBox clbBarcodes;
+        private System.Windows.Forms.Label lblBarcodeRegEx;
+        private System.Windows.Forms.TextBox tbBarcodeRegEx;
+        private System.Windows.Forms.Label lblBarcodeIgnore;
+        private System.Windows.Forms.TextBox tbBarcodeIgnore;
+        private System.Windows.Forms.DataGridView dgRestParameter;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Parameter;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Value;
     }
 }

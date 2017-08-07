@@ -94,6 +94,7 @@ namespace NAPS2.WinForms
             rdFilePerScan.Checked = BatchSettings.SaveSeparator == SaveSeparator.FilePerScan;
             rdFilePerPage.Checked = BatchSettings.SaveSeparator == SaveSeparator.FilePerPage;
             rdSeparateByPatchT.Checked = BatchSettings.SaveSeparator == SaveSeparator.PatchT;
+            rdSeparateByBarcode.Checked = BatchSettings.SaveSeparator == SaveSeparator.Barcode;
 
             txtFilePath.Text = BatchSettings.SavePath;
         }
@@ -140,6 +141,7 @@ namespace NAPS2.WinForms
 
             BatchSettings.SaveSeparator = rdFilePerScan.Checked ? SaveSeparator.FilePerScan
                                         : rdSeparateByPatchT.Checked ? SaveSeparator.PatchT
+                                        : rdSeparateByBarcode.Checked ? SaveSeparator.Barcode
                                         : SaveSeparator.FilePerPage;
 
             BatchSettings.SavePath = txtFilePath.Text;

@@ -74,7 +74,8 @@ namespace NAPS2.WinForms
 
         private void txtFileName_TextChanged(object sender, EventArgs e)
         {
-            lblPreview.Text = fileNamePlaceholders.SubstitutePlaceholders(txtFileName.Text, DateTime.Now, false);
+            var barcode = "barcode";
+            lblPreview.Text = fileNamePlaceholders.SubstitutePlaceholders(txtFileName.Text, DateTime.Now, barcode, false);
         }
     }
 }

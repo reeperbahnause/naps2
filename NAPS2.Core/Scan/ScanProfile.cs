@@ -133,6 +133,14 @@ namespace NAPS2.Scan
         public bool ClearImagesAfterSaving { get; set; }
 
         public SaveSeparator Separator { get; set; }
+
+        public string BarcodeType { get; set; }
+
+        public string BarcodeRegEx { get; set; }
+
+        public string BarcodeIgnore { get; set; }
+
+        public List<string> RestParameter { get; set; }
     }
 
     public enum TwainImpl

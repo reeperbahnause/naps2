@@ -88,7 +88,8 @@ namespace NAPS2.WinForms
             return op.Status.Success;
         }
 
-        public bool SaveImages(List<ScannedImage> images, ISaveNotify notify)
+        // Squeeze new parameter tmpPath to save documents before export
+        public bool SaveImages(List<ScannedImage> images, ISaveNotify notify, string tmpFileName = "")
         {
             if (images.Any())
             {
@@ -98,6 +99,10 @@ namespace NAPS2.WinForms
                 if (imageSettings.SkipSavePrompt && Path.IsPathRooted(imageSettings.DefaultFileName))
                 {
                     savePath = imageSettings.DefaultFileName;
+                }
+                else if (tmpFileName != "")
+                {
+                    savePath = tmpFileName;
                 }
                 else
                 {
@@ -137,7 +142,8 @@ namespace NAPS2.WinForms
                 {
                     attachmentName += ".pdf";
                 }
-                attachmentName = fileNamePlaceholders.SubstitutePlaceholders(attachmentName, DateTime.Now, false);
+                var barcode = images[0].Barcode;
+                attachmentName = fileNamePlaceholders.SubstitutePlaceholders(attachmentName, DateTime.Now, barcode, false);
 
                 var tempFolder = new DirectoryInfo(Path.Combine(Paths.Temp, Path.GetRandomFileName()));
                 tempFolder.Create();

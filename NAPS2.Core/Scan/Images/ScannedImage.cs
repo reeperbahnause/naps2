@@ -66,6 +66,8 @@ namespace NAPS2.Scan.Images
 
         public PatchCode PatchCode { get; set; }
 
+        public string Barcode { get; set; }
+
         public ImageFormat FileFormat => recoveryImage.FileFormat;
 
         public RecoveryIndexImage RecoveryIndexImage => recoveryImage.IndexImage;

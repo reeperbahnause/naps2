@@ -10,6 +10,7 @@ using NAPS2.Lang.Resources;
 using NAPS2.Operation;
 using NAPS2.Scan.Images;
 using NAPS2.Util;
+using ZXing;
 
 namespace NAPS2.WinForms
 {
@@ -42,6 +43,7 @@ namespace NAPS2.WinForms
         private readonly IOperationFactory operationFactory;
         private readonly WinFormsExportHelper exportHelper;
         private readonly AppConfigManager appConfigManager;
+        private ToolStripButton tsBarcode;
         private readonly ScannedImageRenderer scannedImageRenderer;
 
         public FViewer(ChangeTracker changeTracker, IOperationFactory operationFactory, WinFormsExportHelper exportHelper, AppConfigManager appConfigManager, ScannedImageRenderer scannedImageRenderer)
@@ -126,6 +128,7 @@ namespace NAPS2.WinForms
             this.tsSaveImage = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.tsDelete = new System.Windows.Forms.ToolStripButton();
+            this.tsBarcode = new System.Windows.Forms.ToolStripButton();
             this.toolStripContainer1.ContentPanel.SuspendLayout();
             this.toolStripContainer1.TopToolStripPanel.SuspendLayout();
             this.toolStripContainer1.SuspendLayout();
@@ -170,7 +173,8 @@ namespace NAPS2.WinForms
             this.tsSavePDF,
             this.tsSaveImage,
             this.toolStripSeparator2,
-            this.tsDelete});
+            this.tsDelete,
+            this.tsBarcode});
             this.toolStrip1.Name = "toolStrip1";
             // 
             // tbPageCurrent
@@ -311,6 +315,14 @@ namespace NAPS2.WinForms
             this.tsDelete.Name = "tsDelete";
             this.tsDelete.Click += new System.EventHandler(this.tsDelete_Click);
             // 
+            // tsBarcode
+            // 
+            this.tsBarcode.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.tsBarcode.Image = global::NAPS2.Icons.tick_small;
+            resources.ApplyResources(this.tsBarcode, "tsBarcode");
+            this.tsBarcode.Name = "tsBarcode";
+            this.tsBarcode.Click += new System.EventHandler(this.tsBarcode_Click);
+            // 
             // FViewer
             // 
             resources.ApplyResources(this, "$this");
@@ -425,6 +437,24 @@ namespace NAPS2.WinForms
             {
                 DeleteCurrentImage();
             }
+        }
+
+        private void tsBarcode_Click(object sender, EventArgs e)
+        {
+            IMultipleBarcodeReader multiReader = new BarcodeReader();
+            multiReader.Options.TryHarder = true;
+            var test = scannedImageRenderer.Render(ImageList.Images[ImageIndex]);
+            var barcodeResult = multiReader.DecodeMultiple(test);
+            if (barcodeResult != null)
+            {
+                foreach (var barcode in barcodeResult)
+                {
+                    //MessageBox.Show(string.Format(MiscResources.ConfirmDeleteItems, 1), MiscResources.Delete, MessageBoxButtons.OKCancel, MessageBoxIcon.Question);
+                    MessageBox.Show(barcode.BarcodeFormat + " " + barcode.Text, MiscResources.Delete, MessageBoxButtons.OKCancel, MessageBoxIcon.Question);
+                    //System.Diagnostics.Debug.WriteLine(barcode);
+                }
+            }
+
         }
 
         private void DeleteCurrentImage()

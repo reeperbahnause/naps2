@@ -213,6 +213,56 @@ namespace NAPS2.Scan.Images
                     }
                 }
             }
+            else if (scanParams.DetectBarcodes)
+            {
+                IMultipleBarcodeReader multiReader = new BarcodeReader();
+                multiReader.Options.TryHarder = true;
+                // profile.AutoSaveSettings.Separator == ImportExport.SaveSeparator.Barcode
+                if (profile.AutoSaveSettings != null)
+                {
+                    if (profile.AutoSaveSettings.BarcodeType != null && profile.AutoSaveSettings.BarcodeType != "")
+                    {
+                        switch (profile.AutoSaveSettings.BarcodeType)
+                        {
+                            case "2of5 interleaved":
+                                multiReader.Options.PossibleFormats = new List<BarcodeFormat>();
+                                multiReader.Options.PossibleFormats.Add(BarcodeFormat.ITF);
+                                break;
+                            case "Code 39":
+                                multiReader.Options.PossibleFormats = new List<BarcodeFormat>();
+                                multiReader.Options.PossibleFormats.Add(BarcodeFormat.CODE_39);
+                                break;
+                            case "Code 93":
+                                multiReader.Options.PossibleFormats = new List<BarcodeFormat>();
+                                multiReader.Options.PossibleFormats.Add(BarcodeFormat.CODE_93);
+                                break;
+                            case "Code 128":
+                                multiReader.Options.PossibleFormats = new List<BarcodeFormat>();
+                                multiReader.Options.PossibleFormats.Add(BarcodeFormat.CODE_128);
+                                break;
+                            case "EAN 8":
+                                multiReader.Options.PossibleFormats = new List<BarcodeFormat>();
+                                multiReader.Options.PossibleFormats.Add(BarcodeFormat.EAN_8);
+                                break;
+                            case "EAN13":
+                                multiReader.Options.PossibleFormats = new List<BarcodeFormat>();
+                                multiReader.Options.PossibleFormats.Add(BarcodeFormat.EAN_13);
+                                break;
+                        }
+
+                    }
+                }
+                
+                var barcodeResult = multiReader.DecodeMultiple(bitmap);
+                if (barcodeResult != null)
+                {
+                    foreach (var barcode in barcodeResult)
+                    {
+                        image.Barcode = barcode.Text;
+                        System.Diagnostics.Debug.WriteLine(barcode.BarcodeFormat + " = " + barcode.Text);
+                    }
+                }
+            }
         }
 
         private void AddTransformAndUpdateThumbnail(ScannedImage image, ref Bitmap bitmap, Transform transform)
